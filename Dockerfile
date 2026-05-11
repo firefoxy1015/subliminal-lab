@@ -13,6 +13,7 @@ RUN npm ci --omit=dev
 
 # Copy source
 COPY render.js server.js ./
+COPY public ./public
 
 # Render assigns PORT
 ENV NODE_ENV=production
