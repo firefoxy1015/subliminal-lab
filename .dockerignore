@@ -1,0 +1,10 @@
+node_modules
+cache
+output
+*.log
+.git
+demo*.json
+*.png
+tts-test.js
+music-test.js
+check.js

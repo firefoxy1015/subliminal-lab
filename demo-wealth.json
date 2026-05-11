@@ -1,0 +1,23 @@
+{
+  "title": "ritual-wealth",
+  "mode": "silent",
+  "duration_sec": 60,
+  "bg_db": -3,
+  "speed_mult": 3,
+  "voice_db": -6,
+  "solfeggio": 432,
+  "music_prompt": "凯尔特神秘仪式音乐，金币丁当的清脆音效，竖琴拨弦，低音手鼓稳定鼓点，男低音咏唱古老咒语，远处森林风声，篝火噼啪，丰盛富足的能量氛围，类似 Loreena McKennitt、Adiemus，慢速 70BPM，温暖低频共振",
+  "voice": {
+    "speech_rate": "-25",
+    "emotion": "calm",
+    "emotion_scale": "3"
+  },
+  "affirmations": [
+    "财富如河流般流向我。",
+    "我配得上无限的丰盛。",
+    "金钱轻松而稳定地来到我身边。",
+    "我的账户每天都在增长。",
+    "宇宙慷慨地回应我的渴望。",
+    "我是财富的磁石。"
+  ]
+}

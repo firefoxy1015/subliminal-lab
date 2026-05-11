@@ -1,0 +1,18 @@
+{
+  "title": "self-love-test",
+  "mode": "silent",
+  "duration_sec": 60,
+  "background": "rain",
+  "voice": {
+    "speech_rate": "-25",
+    "emotion": "calm",
+    "emotion_scale": "3"
+  },
+  "affirmations": [
+    "我值得被爱。",
+    "我是自信而美丽的。",
+    "我的内在充满平静与力量。",
+    "我吸引一切美好的事物进入生命。",
+    "我接纳真实的自己。"
+  ]
+}

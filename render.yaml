@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: subliminal-lab-api
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/healthz
+    envVars:
+      - key: MAX_CONCURRENT
+        value: "1"
+      - key: MAX_DURATION
+        value: "600"

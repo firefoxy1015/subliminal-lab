@@ -1,0 +1,22 @@
+{
+  "title": "ritual-silent",
+  "mode": "silent",
+  "duration_sec": 60,
+  "bg_db": -3,
+  "speed_mult": 3,
+  "voice_db": -6,
+  "solfeggio": 528,
+  "music_prompt": "黑暗神秘的萨满仪式音乐，缓慢低沉的部落鼓点，远处的钟声回响，女声哼唱无歌词的吟诵，烛光摇曳的氛围，朦胧的合成器铺底，慢节奏，低频共振，神秘主义新世纪风格，类似 Enigma、Dead Can Dance",
+  "voice": {
+    "speech_rate": "-25",
+    "emotion": "calm",
+    "emotion_scale": "3"
+  },
+  "affirmations": [
+    "我值得被爱。",
+    "我是自信而美丽的。",
+    "我的内在充满平静与力量。",
+    "我吸引一切美好的事物进入生命。",
+    "我接纳真实的自己。"
+  ]
+}

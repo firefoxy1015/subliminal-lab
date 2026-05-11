@@ -1,0 +1,12 @@
+{
+  "title": "quick-test",
+  "mode": "audible",
+  "duration_sec": 30,
+  "background": "rain",
+  "bg_db": -5,
+  "speed_mult": 3,
+  "layers": 2,
+  "voice_db": -28,
+  "voice": {"speech_rate":"-25","emotion":"calm","emotion_scale":"3"},
+  "affirmations": ["我很好。"]
+}

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>仪式音频 · Ritual Audio Lab</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#0a0612;color:#e7d9ff;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;-webkit-font-smoothing:antialiased}
+  body{min-height:100vh;background:
+    radial-gradient(ellipse at 20% 0%,rgba(125,60,200,.25),transparent 50%),
+    radial-gradient(ellipse at 80% 100%,rgba(200,80,120,.2),transparent 50%),
+    #0a0612;
+    padding:24px 16px 80px}
+  .container{max-width:560px;margin:0 auto}
+  header{text-align:center;padding:32px 0 28px}
+  h1{font-size:28px;margin:0 0 8px;font-weight:600;letter-spacing:1px;
+    background:linear-gradient(90deg,#d9b8ff,#ff9ec7,#d9b8ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    background-size:200% auto;animation:shimmer 5s linear infinite}
+  @keyframes shimmer{to{background-position:200% center}}
+  .sub{color:#a39ab8;font-size:13px;line-height:1.6;margin-top:6px}
+  .card{background:rgba(30,18,50,.5);border:1px solid rgba(180,140,255,.15);border-radius:18px;padding:20px;margin-bottom:16px;backdrop-filter:blur(20px)}
+  .label{display:block;font-size:13px;color:#bba8d8;margin:14px 0 6px;font-weight:500}
+  .label:first-child{margin-top:0}
+  input,textarea,select{width:100%;background:rgba(15,8,28,.7);border:1px solid rgba(180,140,255,.2);color:#e7d9ff;border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
+  input:focus,textarea:focus,select:focus{border-color:#b888ff}
+  textarea{min-height:110px;resize:vertical;line-height:1.7}
+  .themes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .theme{cursor:pointer;text-align:center;padding:14px 8px;background:rgba(15,8,28,.5);border:1px solid rgba(180,140,255,.15);border-radius:12px;transition:all .15s}
+  .theme.active{background:rgba(180,140,255,.18);border-color:#b888ff;box-shadow:0 0 24px rgba(184,136,255,.25)}
+  .theme .icon{font-size:24px;margin-bottom:4px;display:block}
+  .theme .name{font-size:13px;color:#e7d9ff}
+  .theme .desc{font-size:10px;color:#9080a8;margin-top:2px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  button.go{width:100%;background:linear-gradient(135deg,#a266ff 0%,#ff6699 100%);border:none;color:#fff;padding:16px;border-radius:14px;font-size:16px;font-weight:600;letter-spacing:1px;cursor:pointer;margin-top:12px;box-shadow:0 8px 24px rgba(162,102,255,.35);transition:transform .1s}
+  button.go:hover{transform:translateY(-1px)}
+  button.go:active{transform:translateY(0)}
+  button.go:disabled{opacity:.5;cursor:not-allowed}
+  .progress{background:rgba(15,8,28,.7);border-radius:10px;height:8px;overflow:hidden;margin:10px 0}
+  .progress-bar{height:100%;background:linear-gradient(90deg,#a266ff,#ff6699);transition:width .5s;width:0%}
+  .status{font-size:13px;color:#bba8d8;text-align:center;margin:8px 0;min-height:18px}
+  audio{width:100%;margin-top:12px;border-radius:10px}
+  .download{display:inline-block;margin-top:8px;background:rgba(180,140,255,.15);color:#d9b8ff;padding:10px 18px;border-radius:10px;text-decoration:none;font-size:14px;border:1px solid rgba(180,140,255,.25)}
+  .hide{display:none}
+  .disclaimer{font-size:11px;color:#7a6a90;text-align:center;line-height:1.6;margin-top:24px}
+  .badge{display:inline-block;background:rgba(180,140,255,.15);color:#d9b8ff;padding:2px 8px;border-radius:6px;font-size:10px;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>仪式音频实验室</h1>
+    <div class="sub">AI 生成 · 仪式氛围 · 潜意识肯定语<br>戴上耳机，闭上眼睛</div>
+  </header>
+
+  <div class="card">
+    <span class="label">✨ 自定义主题（描述你的目标）</span>
+    <div style="display:flex;gap:8px">
+      <input id="custom_goal" placeholder="例如：考试上岸 / 自信社交 / 创业突破">
+      <button id="design_btn" style="flex-shrink:0;background:rgba(180,140,255,.2);border:1px solid rgba(180,140,255,.35);color:#e7d9ff;padding:0 16px;border-radius:10px;font-size:13px;cursor:pointer;white-space:nowrap">AI 设计</button>
+    </div>
+    <div id="design_status" style="font-size:12px;color:#9080a8;margin-top:6px;min-height:14px"></div>
+
+    <span class="label">或选预设主题</span>
+    <div class="themes" id="themes"></div>
+  </div>
+
+  <div class="card">
+    <span class="label">音乐风格描述</span>
+    <textarea id="music_prompt" placeholder="描述你想要的仪式音乐氛围..."></textarea>
+
+    <span class="label">肯定语（每行一句）</span>
+    <textarea id="affirmations" placeholder="每行一句中文肯定语..."></textarea>
+
+    <div class="row" style="margin-top:14px">
+      <div>
+        <span class="label">时长</span>
+        <select id="duration_sec">
+          <option value="30">30秒（试听）</option>
+          <option value="60" selected>1分钟</option>
+          <option value="180">3分钟</option>
+          <option value="300">5分钟</option>
+        </select>
+      </div>
+      <div>
+        <span class="label">隐藏方式</span>
+        <select id="mode">
+          <option value="silent" selected>无声（听不见 ✨）</option>
+          <option value="audible">隐约可听</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="go" id="go">✦ 开始生成 ✦</button>
+  </div>
+
+  <div class="card hide" id="result">
+    <div class="status" id="status">准备中...</div>
+    <div class="progress"><div class="progress-bar" id="bar"></div></div>
+    <div id="player" class="hide">
+      <audio id="audio" controls></audio>
+      <a class="download" id="dl" href="" download>↓ 下载 MP3</a>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    本工具用于冥想 · 助眠 · 放松<br>
+    生成结果仅供个人使用，不构成医疗建议
+  </div>
+</div>
+
+<script>
+const THEMES = [
+  { id:'love', icon:'🌹', name:'自我爱护', desc:'528Hz · 玫瑰之心',
+    music:'圣洁庄严的教堂圣咏，女高音清唱拉丁圣歌，温柔的管风琴铺底，远处钟楼回响，玫瑰花瓣飘落的氛围，烛光摇曳，浪漫神圣的爱情能量，类似 Enya、Hildegard von Bingen 中世纪圣咏，慢速 60BPM，柔和的混响空间',
+    solfeggio: 528,
+    aff: ['我值得被爱。','我是自信而美丽的。','我的内在充满平静与力量。','我吸引一切美好的事物进入生命。','我接纳真实的自己。'] },
+  { id:'wealth', icon:'💰', name:'丰盛财富', desc:'432Hz · 凯尔特金币',
+    music:'凯尔特神秘仪式音乐，金币丁当的清脆音效，竖琴拨弦，低音手鼓稳定鼓点，男低音咏唱古老咒语，远处森林风声，篝火噼啪，丰盛富足的能量氛围，类似 Loreena McKennitt、Adiemus，慢速 70BPM，温暖低频共振',
+    solfeggio: 432,
+    aff: ['财富如河流般流向我。','我配得上无限的丰盛。','金钱轻松而稳定地来到我身边。','我的账户每天都在增长。','宇宙慷慨地回应我的渴望。','我是财富的磁石。'] },
+  { id:'spiritual', icon:'💎', name:'高维觉知', desc:'963Hz · 颂钵冥想',
+    music:'西藏颂钵深沉嗡鸣，铜碗持续共振，远处藏传佛教喇嘛低音咒语吟诵，水晶罄轻击，山顶冷冽风声，松木燃烧的微弱噼啪，超脱凡尘的高维灵性氛围，类似 Deuter、Snatam Kaur，极慢 50BPM，深度冥想空间',
+    solfeggio: 963,
+    aff: ['我与宇宙的智慧连接。','我的振动频率持续提升。','我清晰地感知到内在的指引。','我已开启高维的觉知。','我的能量场纯净而强大。','我是光，我是爱，我是无限。'] },
+  { id:'slim', icon:'🌿', name:'轻盈身体', desc:'528Hz · 森林精灵',
+    music:'轻盈空灵的森林精灵仪式音乐，潺潺溪水流过石头，远处鸟鸣，竹笛清脆的吹奏，温柔的弦乐铺底，女声无歌词的天使般哼唱，微风穿过树叶的沙沙声，水晶罄轻击，轻盈飘逸的能量氛围，类似 Enya、Karunesh，中慢速 75BPM',
+    solfeggio: 528,
+    aff: ['我的身体轻盈而充满活力。','我自然地选择滋养我的食物。','我的代谢稳定而高效。','我热爱并尊重我的身体。','我每一天都更接近理想的自己。','健康与轻盈是我的天然状态。'] },
+];
+
+const themesEl = document.getElementById('themes');
+let active = THEMES[0];
+THEMES.forEach((t, i) => {
+  const el = document.createElement('div');
+  el.className = 'theme' + (i === 0 ? ' active' : '');
+  el.innerHTML = `<span class="icon">${t.icon}</span><div class="name">${t.name}</div><div class="desc">${t.desc}</div>`;
+  el.onclick = () => {
+    document.querySelectorAll('.theme').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    active = t;
+    apply();
+  };
+  themesEl.appendChild(el);
+});
+
+function apply() {
+  document.getElementById('music_prompt').value = active.music;
+  document.getElementById('affirmations').value = active.aff.join('\n');
+}
+apply();
+
+// ----- AI custom designer -----
+const designBtn = document.getElementById('design_btn');
+const designStatus = document.getElementById('design_status');
+const customGoal = document.getElementById('custom_goal');
+
+designBtn.onclick = async () => {
+  const goal = customGoal.value.trim();
+  if (!goal) { designStatus.textContent = '请先输入你的主题'; return; }
+  designBtn.disabled = true;
+  designStatus.textContent = '🪄 AI 正在为你设计仪式...';
+  try {
+    const r = await fetch('/api/design', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ goal })
+    }).then(x => x.json());
+    if (r.error) {
+      designStatus.textContent = '❌ ' + r.error;
+      designBtn.disabled = false;
+      return;
+    }
+    // Replace active theme with AI-designed one
+    active = {
+      id: 'custom-' + Date.now(),
+      icon: r.icon || '✨',
+      name: r.theme_name || goal,
+      desc: r.solfeggio + 'Hz',
+      music: r.music_prompt,
+      aff: r.affirmations,
+      solfeggio: r.solfeggio,
+    };
+    document.querySelectorAll('.theme').forEach(x => x.classList.remove('active'));
+    apply();
+    designStatus.textContent = `✨ "${active.name}" ${active.icon} · ${active.solfeggio}Hz · 已应用，下面可继续编辑`;
+  } catch (e) {
+    designStatus.textContent = '❌ 网络错误：' + e.message;
+  } finally {
+    designBtn.disabled = false;
+  }
+};
+
+const go = document.getElementById('go');
+const result = document.getElementById('result');
+const status = document.getElementById('status');
+const bar = document.getElementById('bar');
+const player = document.getElementById('player');
+const audio = document.getElementById('audio');
+const dl = document.getElementById('dl');
+
+const STEP_TEXT = {
+  queued: '排队中...',
+  init: '准备中...',
+  tts: '生成肯定语语音...',
+  hiding: '处理隐藏频率...',
+  music: '生成仪式音乐（最慢一步，2-4分钟）...',
+  mixing: '最终混音...',
+  done: '✨ 完成 ✨',
+};
+
+go.onclick = async () => {
+  const cfg = {
+    title: active.id,
+    mode: document.getElementById('mode').value,
+    duration_sec: Number(document.getElementById('duration_sec').value),
+    bg_db: -3,
+    speed_mult: 3,
+    voice_db: document.getElementById('mode').value === 'silent' ? -6 : -28,
+    layers: 2,
+    solfeggio: active.solfeggio,
+    music_prompt: document.getElementById('music_prompt').value.trim(),
+    voice: { speech_rate: '-25', emotion: 'calm', emotion_scale: '3' },
+    affirmations: document.getElementById('affirmations').value.split('\n').map(s=>s.trim()).filter(Boolean),
+  };
+  if (cfg.affirmations.length === 0) { alert('请至少输入一句肯定语'); return; }
+
+  go.disabled = true;
+  result.classList.remove('hide');
+  player.classList.add('hide');
+  status.textContent = '提交任务...';
+  bar.style.width = '2%';
+
+  let r;
+  try {
+    r = await fetch('/api/render', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify(cfg),
+    }).then(x => x.json());
+  } catch (e) {
+    status.textContent = '❌ 网络错误：' + e.message;
+    go.disabled = false;
+    return;
+  }
+  if (!r.job_id) {
+    status.textContent = '❌ ' + (r.errors?.join(', ') || JSON.stringify(r));
+    go.disabled = false;
+    return;
+  }
+
+  status.textContent = STEP_TEXT.queued;
+  const t0 = Date.now();
+  const poll = setInterval(async () => {
+    const s = await fetch('/api/status/' + r.job_id).then(x => x.json()).catch(() => null);
+    if (!s) return;
+    bar.style.width = Math.max(2, s.pct || 0) + '%';
+    status.textContent = (STEP_TEXT[s.step] || s.step || '处理中') +
+      ` (${Math.round((Date.now() - t0) / 1000)}s)`;
+    if (s.state === 'done') {
+      clearInterval(poll);
+      bar.style.width = '100%';
+      status.textContent = STEP_TEXT.done;
+      audio.src = s.download_url;
+      dl.href = s.download_url;
+      dl.setAttribute('download', active.id + '.mp3');
+      player.classList.remove('hide');
+      go.disabled = false;
+    } else if (s.state === 'error') {
+      clearInterval(poll);
+      status.textContent = '❌ ' + s.error;
+      go.disabled = false;
+    }
+  }, 2000);
+};
+</script>
+</body>
+</html>

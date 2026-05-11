@@ -1,0 +1,23 @@
+{
+  "title": "ritual-spiritual",
+  "mode": "silent",
+  "duration_sec": 60,
+  "bg_db": -3,
+  "speed_mult": 3,
+  "voice_db": -6,
+  "solfeggio": 963,
+  "music_prompt": "西藏颂钵深沉嗡鸣，铜碗持续共振，远处藏传佛教喇嘛低音咒语吟诵，水晶罄轻击，山顶冷冽风声，松木燃烧的微弱噼啪，超脱凡尘的高维灵性氛围，类似 Deuter、Snatam Kaur，极慢 50BPM，深度冥想空间，丰富的低频与超高频泛音",
+  "voice": {
+    "speech_rate": "-25",
+    "emotion": "calm",
+    "emotion_scale": "3"
+  },
+  "affirmations": [
+    "我与宇宙的智慧连接。",
+    "我的振动频率持续提升。",
+    "我清晰地感知到内在的指引。",
+    "我已开启高维的觉知。",
+    "我的能量场纯净而强大。",
+    "我是光，我是爱，我是无限。"
+  ]
+}

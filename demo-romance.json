@@ -1,0 +1,23 @@
+{
+  "title": "ritual-romance",
+  "mode": "silent",
+  "duration_sec": 60,
+  "bg_db": -3,
+  "speed_mult": 3,
+  "voice_db": -6,
+  "solfeggio": 639,
+  "music_prompt": "圣洁庄严的教堂圣咏，女高音清唱拉丁圣歌，温柔的管风琴铺底，远处钟楼回响，玫瑰花瓣飘落的氛围，烛光摇曳，浪漫神圣的爱情能量，类似 Enya、Hildegard von Bingen 中世纪圣咏，慢速 60BPM，柔和的混响空间",
+  "voice": {
+    "speech_rate": "-25",
+    "emotion": "calm",
+    "emotion_scale": "3"
+  },
+  "affirmations": [
+    "真爱正在向我走来。",
+    "我值得被深深地爱着。",
+    "我吸引灵魂伴侣进入我的生命。",
+    "我的内心充满温柔与魅力。",
+    "我准备好接受完美的关系。",
+    "爱情是我天生的权利。"
+  ]
+}

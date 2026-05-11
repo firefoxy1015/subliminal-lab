@@ -1,0 +1,23 @@
+{
+  "title": "ritual-slim",
+  "mode": "silent",
+  "duration_sec": 60,
+  "bg_db": -3,
+  "speed_mult": 3,
+  "voice_db": -6,
+  "solfeggio": 528,
+  "music_prompt": "轻盈空灵的森林精灵仪式音乐，潺潺溪水流过石头，远处鸟鸣，竹笛清脆的吹奏，温柔的弦乐铺底，女声无歌词的天使般哼唱，微风穿过树叶的沙沙声，水晶罄轻击，轻盈飘逸的能量氛围，类似 Enya、Karunesh，中慢速 75BPM，明亮的高频泛音，让身体感到轻盈流动",
+  "voice": {
+    "speech_rate": "-25",
+    "emotion": "calm",
+    "emotion_scale": "3"
+  },
+  "affirmations": [
+    "我的身体轻盈而充满活力。",
+    "我自然地选择滋养我的食物。",
+    "我的代谢稳定而高效。",
+    "我热爱并尊重我的身体。",
+    "我每一天都更接近理想的自己。",
+    "健康与轻盈是我的天然状态。"
+  ]
+}
