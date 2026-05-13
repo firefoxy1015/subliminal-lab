@@ -1,0 +1,23 @@
+{
+  "title": "self-love",
+  "mode": "silent",
+  "duration_sec": 60,
+  "bg_db": -3,
+  "speed_mult": 3,
+  "layers": 2,
+  "voice_db": -6,
+  "solfeggio": 528,
+  "music_prompt": "圣洁庄严的教堂圣咏，女高音清唱拉丁圣歌，温柔的管风琴铺底，远处钟楼回响，玫瑰花瓣飘落的氛围，烛光摇曳，类似 Enya、Hildegard von Bingen 中世纪圣咏，慢速 60BPM",
+  "voice": {
+    "speech_rate": "-25",
+    "emotion": "calm",
+    "emotion_scale": "3"
+  },
+  "affirmations": [
+    "我值得被爱。",
+    "我是自信而美丽的。",
+    "我的内在充满平静与力量。",
+    "我吸引一切美好的事物进入生命。",
+    "我接纳真实的自己。"
+  ]
+}
