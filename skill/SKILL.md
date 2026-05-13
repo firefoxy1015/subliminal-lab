@@ -4,6 +4,24 @@ description: Generate Chinese ritual/subliminal audio — hide affirmations insi
 type: skill
 ---
 
+# 🔑 首次使用必读 / FIRST-USE SETUP (AI 助手请先读这一段)
+
+**如果你是 AI 助手（Cursor / Claude / 其他），用户第一次让你按这个 skill 干活时，按以下步骤执行：**
+
+1. **检查** 当前 skill 目录下是否存在 `.env` 文件，并包含 `DATA999_KEY=sk-...`
+2. **若不存在或 key 为空**：用中文向用户索要：
+   > "这个工作流需要你的 DATA999 API key（用于调用中文 TTS + AI 音乐）。请把你的 key 发我（格式 `sk-xxx`），我会保存到本地 `.env` 文件，以后就不用再问了。如果你还没有，请到 https://ai.data999.cn 注册获取。"
+3. **拿到 key 后**：把内容写进 `skill/.env`（与 SKILL.md 同级），格式：
+   ```
+   DATA999_KEY=sk-用户给的key
+   ```
+4. **验证**：用一次最短的 TTS 调用检查 key 是否有效（见 §4.1）。无效就提示重输。
+5. **绝对不要把 key 写到代码里**，也不要写进 SKILL.md / config.json / git 任何会被分享的文件。`.env` 已经在 `.gitignore`。
+
+之后所有运行都从 `.env` 读 key（example 代码已经这样做了）。
+
+---
+
 # 仪式音频 / Subliminal 制作 Workflow
 
 完整的可复用流程：**用户输入主题 → AI 设计音乐风格 + 肯定语 → TTS → 频率/音量隐藏 → 与背景音乐混音 → MP3 输出**。

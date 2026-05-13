@@ -18,6 +18,29 @@ from typing import Any, Dict, List
 
 import httpx
 
+
+def _load_env_file() -> None:
+    """Load DATA999_KEY from skill/.env if not already in environ."""
+    if os.environ.get("DATA999_KEY"):
+        return
+    # Look for .env in skill/ (parent of examples/) and in cwd
+    here = Path(__file__).resolve().parent
+    candidates = [here.parent / ".env", here / ".env", Path.cwd() / ".env"]
+    for env_path in candidates:
+        if not env_path.exists():
+            continue
+        for line in env_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, _, v = line.partition("=")
+            v = v.strip().strip('"').strip("'")
+            if k.strip() and v and k.strip() not in os.environ:
+                os.environ[k.strip()] = v
+        break
+
+
+_load_env_file()
 API_KEY = os.environ.get("DATA999_KEY", "")
 API_BASE = "https://api.ai6800.com/api"
 FFMPEG = "ffmpeg"
@@ -253,7 +276,12 @@ async def render(cfg: Dict[str, Any], out_dir: Path) -> Path:
 
 def main() -> None:
     if not API_KEY:
-        sys.exit("ERROR: set DATA999_KEY environment variable")
+        sys.exit(
+            "ERROR: DATA999_KEY not set.\n"
+            "  Option A: copy skill/.env.example to skill/.env and fill in your key\n"
+            "  Option B: export DATA999_KEY=sk-...  before running\n"
+            "  Get a key at https://ai.data999.cn"
+        )
     if len(sys.argv) < 2:
         sys.exit("usage: python render_python.py config.json")
     cfg = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
