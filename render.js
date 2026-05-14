@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const API_KEY = 'sk-37b060cd778ee075ac3388fe421c6df1cc367f591238195c';
-const API_BASE = 'https://api.ai6800.com/api';
+const API_BASE = 'https://api.lingkeai.ai';
 
 // ---------- utilities ----------
 

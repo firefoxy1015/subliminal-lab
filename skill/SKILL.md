@@ -10,7 +10,7 @@ type: skill
 
 1. **检查** 当前 skill 目录下是否存在 `.env` 文件，并包含 `DATA999_KEY=sk-...`
 2. **若不存在或 key 为空**：用中文向用户索要：
-   > "这个工作流需要你的 DATA999 API key（用于调用中文 TTS + AI 音乐）。请把你的 key 发我（格式 `sk-xxx`），我会保存到本地 `.env` 文件，以后就不用再问了。如果你还没有，请到 https://ai.data999.cn 注册获取。"
+   > "这个工作流需要你的 DATA999 API key（用于调用中文 TTS + AI 音乐）。请把你的 key 发我（格式 `sk-xxx`），我会保存到本地 `.env` 文件，以后就不用再问了。如果你还没有，请到 https://lingkeai.ai 注册获取。"
 3. **拿到 key 后**：把内容写进 `skill/.env`（与 SKILL.md 同级），格式：
    ```
    DATA999_KEY=sk-用户给的key
@@ -95,7 +95,7 @@ highpass=f=16000,volume=-6dB
 
 ## 4. API 依赖（DATA999 / 智链）
 
-Base URL：`https://api.ai6800.com/api`
+Base URL：`https://api.lingkeai.ai`
 鉴权：`Authorization: Bearer sk-xxx`
 
 ### 4.1 中文 TTS — `doubao-tts-2.0`

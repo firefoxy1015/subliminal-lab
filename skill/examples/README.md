@@ -8,7 +8,7 @@ pip install httpx
 # 1. set your API key (one of these):
 #    a) cp ../.env.example ../.env  → edit .env, paste your sk-... key
 #    b) export DATA999_KEY=sk-xxx
-# get a key at https://ai.data999.cn
+# get a key at https://lingkeai.ai
 
 python render_python.py config.example.json
 ```
@@ -26,7 +26,7 @@ Output: `out/self-love/self-love_silent.mp3` (60s, ~1.4MB)
 - Python 3.10+
 - `httpx` (`pip install httpx`)
 - `ffmpeg` 8.0+ on PATH (with libmp3lame)
-- DATA999 API key (`https://api.ai6800.com`)
+- DATA999 API key (`https://api.lingkeai.ai`)
 
 ## Config schema
 

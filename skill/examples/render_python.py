@@ -42,7 +42,7 @@ def _load_env_file() -> None:
 
 _load_env_file()
 API_KEY = os.environ.get("DATA999_KEY", "")
-API_BASE = "https://api.ai6800.com/api"
+API_BASE = "https://api.lingkeai.ai"
 FFMPEG = "ffmpeg"
 
 
@@ -280,7 +280,7 @@ def main() -> None:
             "ERROR: DATA999_KEY not set.\n"
             "  Option A: copy skill/.env.example to skill/.env and fill in your key\n"
             "  Option B: export DATA999_KEY=sk-...  before running\n"
-            "  Get a key at https://ai.data999.cn"
+            "  Get a key at https://lingkeai.ai"
         )
     if len(sys.argv) < 2:
         sys.exit("usage: python render_python.py config.json")

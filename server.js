@@ -103,7 +103,7 @@ app.get('/api/healthz', (_req, res) => res.send('ok'));
 // User describes a goal (e.g. "考试上岸") → returns music_prompt + affirmations + solfeggio
 
 const API_KEY = process.env.AI_API_KEY || 'sk-37b060cd778ee075ac3388fe421c6df1cc367f591238195c';
-const AI_BASE = 'https://api.ai6800.com/api';
+const AI_BASE = 'https://api.lingkeai.ai';
 
 const DESIGNER_PROMPT = `你是仪式音频设计师。用户会告诉你一个主题/目标，你需要设计：
 
