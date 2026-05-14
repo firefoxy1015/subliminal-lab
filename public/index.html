@@ -205,7 +205,7 @@ const STEP_TEXT = {
   init: '准备中...',
   tts: '生成肯定语语音...',
   hiding: '处理隐藏频率...',
-  music: '生成仪式音乐（最慢一步，2-4分钟）...',
+  music: '🪄 AI 正在创作仪式音乐（约 2-4 分钟，请耐心等待）',
   mixing: '最终混音...',
   done: '✨ 完成 ✨',
 };
@@ -252,14 +252,19 @@ go.onclick = async () => {
 
   status.textContent = STEP_TEXT.queued;
   const t0 = Date.now();
+  let realPct = 2;
+  let realStep = 'queued';
+  let displayPct = 2;
+  let musicStartTime = null;
+
   const poll = setInterval(async () => {
     const s = await fetch('/api/status/' + r.job_id).then(x => x.json()).catch(() => null);
     if (!s) return;
-    bar.style.width = Math.max(2, s.pct || 0) + '%';
-    status.textContent = (STEP_TEXT[s.step] || s.step || '处理中') +
-      ` (${Math.round((Date.now() - t0) / 1000)}s)`;
+    realPct = s.pct || realPct;
+    realStep = s.step || realStep;
     if (s.state === 'done') {
       clearInterval(poll);
+      clearInterval(creep);
       bar.style.width = '100%';
       status.textContent = STEP_TEXT.done;
       audio.src = s.download_url;
@@ -269,10 +274,28 @@ go.onclick = async () => {
       go.disabled = false;
     } else if (s.state === 'error') {
       clearInterval(poll);
+      clearInterval(creep);
       status.textContent = '❌ ' + s.error;
       go.disabled = false;
     }
   }, 2000);
+
+  // Smooth fake-progress tick: during the slow music step, creep from realPct
+  // toward 85% over ~180s with ease-out so the bar feels alive.
+  const creep = setInterval(() => {
+    const elapsed = Math.round((Date.now() - t0) / 1000);
+    let target = Math.max(2, realPct);
+    if (realStep === 'music') {
+      if (musicStartTime === null) musicStartTime = Date.now();
+      const musicElapsed = (Date.now() - musicStartTime) / 1000;
+      const ratio = Math.min(1, musicElapsed / 180);
+      const eased = 1 - Math.pow(1 - ratio, 2);
+      target = Math.max(target, realPct + (85 - realPct) * eased);
+    }
+    if (target > displayPct) displayPct = target;
+    bar.style.width = Math.round(displayPct) + '%';
+    status.textContent = (STEP_TEXT[realStep] || realStep || '处理中') + ` (${elapsed}s)`;
+  }, 500);
 };
 </script>
 </body>
