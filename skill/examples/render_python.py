@@ -230,6 +230,11 @@ async def render(cfg: Dict[str, Any], out_dir: Path) -> Path:
                    "-t", str(duration), "-ar", "44100", "-c:a", "pcm_s16le", str(hidden_full)])
 
         # 5) Background — AI music if prompt provided, else brown-noise rain
+        # Smooth fade-in/out so the audio doesn't start/end abruptly
+        fade_sec = min(3.0, duration / 8)
+        fade_out_start = max(0, duration - fade_sec)
+        fade = f"afade=t=in:st=0:d={fade_sec},afade=t=out:st={fade_out_start}:d={fade_sec}"
+
         bg = out_dir / "bg.wav"
         if music_prompt:
             raw = out_dir / "ai_music_raw.mp3"
@@ -237,13 +242,13 @@ async def render(cfg: Dict[str, Any], out_dir: Path) -> Path:
                 print(f"  AI music: {music_prompt[:60]}…")
                 await ai_music(client, music_prompt, raw)
             await run(["-y", "-stream_loop", "-1", "-i", str(raw),
-                       "-t", str(duration), "-af", f"volume={bg_db}dB",
+                       "-t", str(duration), "-af", f"volume={bg_db}dB,{fade}",
                        "-ar", "44100", "-ac", "2", "-c:a", "pcm_s16le", str(bg)])
         else:
             await run([
                 "-y", "-f", "lavfi",
                 "-i", (f"anoisesrc=color=brown:duration={duration}:sample_rate=44100:"
-                       f"amplitude=0.6,lowpass=f=2000,volume={bg_db}dB"),
+                       f"amplitude=0.6,lowpass=f=2000,volume={bg_db}dB,{fade}"),
                 "-ac", "2", "-ar", "44100", "-c:a", "pcm_s16le", str(bg),
             ])
 

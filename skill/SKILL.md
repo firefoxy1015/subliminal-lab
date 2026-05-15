@@ -212,19 +212,22 @@ ffmpeg -y -stream_loop -1 -i hidden_cycle.wav \
   -t 60 -ar 44100 -c:a pcm_s16le hidden_full.wav
 ```
 
-### 5.5 背景循环 + 音量
+### 5.5 背景循环 + 音量 + 淡入淡出
+
+⚠ **务必加 fade**：硬切入硬切出听感很突兀。fade 时长 = `min(3s, duration/8)`。
 
 ```bash
+# fade = afade=t=in:st=0:d=3,afade=t=out:st=57:d=3   (60s 总时长, fade 3s)
 ffmpeg -y -stream_loop -1 -i ai_music_raw.mp3 \
-  -t 60 -af "volume=-3dB" \
+  -t 60 -af "volume=-3dB,afade=t=in:st=0:d=3,afade=t=out:st=57:d=3" \
   -ar 44100 -ac 2 -c:a pcm_s16le bg.wav
 ```
 
-### 5.6 合成背景（雨声 = brown noise + 低通）
+### 5.6 合成背景（雨声 = brown noise + 低通 + 淡入淡出）
 
 ```bash
 ffmpeg -y -f lavfi \
-  -i "anoisesrc=color=brown:duration=60:sample_rate=44100:amplitude=0.6,lowpass=f=2000,volume=-5dB" \
+  -i "anoisesrc=color=brown:duration=60:sample_rate=44100:amplitude=0.6,lowpass=f=2000,volume=-5dB,afade=t=in:st=0:d=3,afade=t=out:st=57:d=3" \
   -ac 2 -ar 44100 -c:a pcm_s16le rain.wav
 ```
 

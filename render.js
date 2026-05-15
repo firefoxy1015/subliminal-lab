@@ -155,22 +155,27 @@ async function aiMusic(prompt, outPath) {
 
 async function makeBackground(kind, durationSec, outPath, bgDb = -10) {
   log(`Generating background: ${kind} (${durationSec}s, ${bgDb}dB)`);
+  // Smooth fade in/out: max 3s, or 1/8 of duration (whichever smaller).
+  // Avoids the harsh "cut on" / "cut off" feel at start/end.
+  const fadeSec = Math.min(3.0, durationSec / 8);
+  const fadeOutStart = Math.max(0, durationSec - fadeSec);
+  const fade = `afade=t=in:st=0:d=${fadeSec},afade=t=out:st=${fadeOutStart}:d=${fadeSec}`;
   let filter;
   switch (kind) {
     case 'rain':
-      filter = `anoisesrc=color=brown:duration=${durationSec}:sample_rate=44100:amplitude=0.6,lowpass=f=2000,volume=${bgDb}dB`;
+      filter = `anoisesrc=color=brown:duration=${durationSec}:sample_rate=44100:amplitude=0.6,lowpass=f=2000,volume=${bgDb}dB,${fade}`;
       break;
     case 'white':
-      filter = `anoisesrc=color=white:duration=${durationSec}:sample_rate=44100:amplitude=0.3,volume=${bgDb}dB`;
+      filter = `anoisesrc=color=white:duration=${durationSec}:sample_rate=44100:amplitude=0.3,volume=${bgDb}dB,${fade}`;
       break;
     case 'pink':
-      filter = `anoisesrc=color=pink:duration=${durationSec}:sample_rate=44100:amplitude=0.5,volume=${bgDb}dB`;
+      filter = `anoisesrc=color=pink:duration=${durationSec}:sample_rate=44100:amplitude=0.5,volume=${bgDb}dB,${fade}`;
       break;
     case 'binaural':
-      filter = `sine=frequency=200:duration=${durationSec}[l];sine=frequency=207:duration=${durationSec}[r];[l][r]amerge=inputs=2,volume=${bgDb}dB`;
+      filter = `sine=frequency=200:duration=${durationSec}[l];sine=frequency=207:duration=${durationSec}[r];[l][r]amerge=inputs=2,volume=${bgDb}dB,${fade}`;
       break;
     default:
-      filter = `anoisesrc=color=brown:duration=${durationSec}:sample_rate=44100:amplitude=0.5,lowpass=f=2000,volume=${bgDb}dB`;
+      filter = `anoisesrc=color=brown:duration=${durationSec}:sample_rate=44100:amplitude=0.5,lowpass=f=2000,volume=${bgDb}dB,${fade}`;
   }
   await run('ffmpeg', [
     '-y', '-f', 'lavfi', '-i', filter,
@@ -367,17 +372,21 @@ export async function render(cfg, opts = {}) {
   ]);
 
   // 5) Background — AI music if music_prompt provided, else synthesized noise
+  // Smooth fade in/out so it doesn't start/end abruptly.
+  const fadeSec = Math.min(3.0, cfg.duration_sec / 8);
+  const fadeOutStart = Math.max(0, cfg.duration_sec - fadeSec);
+  const fade = `afade=t=in:st=0:d=${fadeSec},afade=t=out:st=${fadeOutStart}:d=${fadeSec}`;
   let bgPath;
   if (cfg.music_prompt) {
     const rawMusicPath = path.join(cacheDir, 'ai_music_raw.mp3');
     try { await fs.access(rawMusicPath); log('  cached AI music'); }
     catch { await aiMusic(cfg.music_prompt, rawMusicPath); }
-    // Loop/trim to target duration, apply bg_db
+    // Loop/trim to target duration, apply bg_db + fade
     bgPath = path.join(cacheDir, `bg_music_${cfg.bg_db ?? -10}.wav`);
     await run('ffmpeg', [
       '-y', '-stream_loop', '-1', '-i', rawMusicPath,
       '-t', String(cfg.duration_sec),
-      '-af', `volume=${cfg.bg_db ?? -10}dB`,
+      '-af', `volume=${cfg.bg_db ?? -10}dB,${fade}`,
       '-ar', '44100', '-ac', '2', '-c:a', 'pcm_s16le', bgPath,
     ]);
   } else {
