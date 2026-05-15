@@ -93,11 +93,20 @@
     </div>
 
     <div style="margin-top:14px">
-      <span class="label">背景音量 <span id="bg_db_val" style="color:#d9b8ff;margin-left:6px">-10 dB</span></span>
+      <span class="label">🔊 背景音量 <span id="bg_db_val" style="color:#d9b8ff;margin-left:6px">-10 dB</span></span>
       <input type="range" id="bg_db" min="-30" max="0" step="1" value="-10"
              style="width:100%;accent-color:#a266ff;height:6px;margin-top:4px">
       <div style="display:flex;justify-content:space-between;font-size:10px;color:#7a6a90;margin-top:2px">
         <span>很轻</span><span>适中</span><span>响亮</span>
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
+      <span class="label">💬 人声音量 <span id="voice_db_val" style="color:#d9b8ff;margin-left:6px">-28 dB</span></span>
+      <input type="range" id="voice_db" min="-50" max="0" step="1" value="-28"
+             style="width:100%;accent-color:#a266ff;height:6px;margin-top:4px">
+      <div id="voice_db_hint" style="font-size:10px;color:#7a6a90;margin-top:2px">
+        可听模式：越低越隐藏（-35 ~ -20 较常用）
       </div>
     </div>
 
@@ -208,6 +217,28 @@ bgDbInput.addEventListener('input', () => {
   bgDbVal.textContent = bgDbInput.value + ' dB';
 });
 
+// Voice volume slider live update + hint by mode
+const voiceDbInput = document.getElementById('voice_db');
+const voiceDbVal = document.getElementById('voice_db_val');
+const voiceDbHint = document.getElementById('voice_db_hint');
+const modeSelect = document.getElementById('mode');
+voiceDbInput.addEventListener('input', () => {
+  voiceDbVal.textContent = voiceDbInput.value + ' dB';
+});
+// Auto-suggest sensible default when mode changes
+function applyVoiceDbDefault() {
+  if (modeSelect.value === 'silent') {
+    voiceDbInput.value = -6;
+    voiceDbHint.textContent = '无声模式：人声在 16kHz+ 听不见区，可放大确保存在';
+  } else {
+    voiceDbInput.value = -28;
+    voiceDbHint.textContent = '可听模式：越低越隐藏（-35 ~ -20 较常用）';
+  }
+  voiceDbVal.textContent = voiceDbInput.value + ' dB';
+}
+modeSelect.addEventListener('change', applyVoiceDbDefault);
+applyVoiceDbDefault();
+
 const go = document.getElementById('go');
 const result = document.getElementById('result');
 const status = document.getElementById('status');
@@ -233,7 +264,7 @@ go.onclick = async () => {
     duration_sec: Number(document.getElementById('duration_sec').value),
     bg_db: Number(document.getElementById('bg_db').value),
     speed_mult: 3,
-    voice_db: document.getElementById('mode').value === 'silent' ? -6 : -28,
+    voice_db: Number(document.getElementById('voice_db').value),
     layers: 2,
     solfeggio: active.solfeggio,
     music_prompt: document.getElementById('music_prompt').value.trim(),
